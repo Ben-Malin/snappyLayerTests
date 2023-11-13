@@ -1,0 +1,27 @@
+#!/bin/bash
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+if [ -d 0 ]; then
+    rm -r 0
+fi
+
+name="$1"
+
+# generate the mesh
+runApplication -o blockMesh
+runApplication -o snappyHexMesh -overwrite
+
+# if the 0 dir exists, move it to 1
+if [ -d 0 ]; then
+    mv 0 1
+fi
+
+# save the mesh images
+printf "Generating mesh images...\n"
+pvpython pvscript.py $name
+
+# Clean the case
+./Allclean
+
+
+
